@@ -14,6 +14,11 @@ from app.schemas import ReportOut
 router = APIRouter(prefix="/api/investigations", tags=["investigations"])
 
 
+def _sanitize(obj):
+    """Make nested dicts JSON-serializable (UUIDs, datetimes → str)."""
+    return json.loads(json.dumps(obj, default=str))
+
+
 @router.post("/{incident_id}/investigate")
 async def start_investigation(incident_id: UUID, db: AsyncSession = Depends(get_db)):
     incident = await db.get(Incident, incident_id)
@@ -30,8 +35,8 @@ async def start_investigation(incident_id: UUID, db: AsyncSession = Depends(get_
                     incident_id=incident_id,
                     root_cause=report_data["root_cause"],
                     confidence=report_data["confidence"],
-                    evidence={"timeline": report_data.get("timeline", []), "agent_findings": report_data.get("agent_findings", [])},
-                    recommendations=report_data.get("recommendations", []),
+                    evidence=_sanitize({"timeline": report_data.get("timeline", []), "agent_findings": report_data.get("agent_findings", [])}),
+                    recommendations=_sanitize(report_data.get("recommendations", [])),
                 )
                 db.add(report)
                 incident.status = IncidentStatus.resolved

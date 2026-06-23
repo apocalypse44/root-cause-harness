@@ -29,8 +29,8 @@ export function CreateIncidentDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Create Incident</Button>
+      <DialogTrigger render={<Button />}>
+        Create Incident
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -38,7 +38,7 @@ export function CreateIncidentDialog() {
         </DialogHeader>
         <div className="space-y-4">
           <Input placeholder="Incident title" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <Select value={serviceId} onValueChange={setServiceId}>
+          <Select value={serviceId} onValueChange={(v) => setServiceId(v ?? "")}>
             <SelectTrigger><SelectValue placeholder="Select service" /></SelectTrigger>
             <SelectContent>
               {services?.map((s) => (
@@ -46,7 +46,7 @@ export function CreateIncidentDialog() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={severity} onValueChange={(v) => setSeverity(v as Severity)}>
+          <Select value={severity} onValueChange={(v) => setSeverity((v ?? "medium") as Severity)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               {["low", "medium", "high", "critical"].map((s) => (

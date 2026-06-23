@@ -56,10 +56,8 @@ export function IncidentsTable({ serviceId }: { serviceId?: string }) {
             </TableCell>
             <TableCell>{new Date(inc.created_at).toLocaleString()}</TableCell>
             <TableCell>
-              <Button variant="outline" size="sm" asChild>
-                <a href={`/incidents/${inc.id}/report`}>
-                  {inc.has_report ? "View Report" : "Investigate"}
-                </a>
+              <Button variant="outline" size="sm" render={<a href={`/incidents/${inc.id}/report`} />}>
+                {inc.has_report ? "View Report" : "Investigate"}
               </Button>
             </TableCell>
           </TableRow>

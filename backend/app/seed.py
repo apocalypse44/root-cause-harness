@@ -103,7 +103,11 @@ async def seed():
 
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
     async with session_factory() as session:
-        for factory in [make_services, make_deployments, make_logs, make_metrics, make_git_changes, make_incidents]:
+        for obj in make_services():
+            session.add(obj)
+        await session.flush()
+
+        for factory in [make_deployments, make_logs, make_metrics, make_git_changes, make_incidents]:
             for obj in factory():
                 session.add(obj)
         await session.commit()

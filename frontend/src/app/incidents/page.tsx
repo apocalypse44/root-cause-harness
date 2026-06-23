@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { IncidentsTable } from "@/components/incidents-table";
 import { CreateIncidentDialog } from "@/components/create-incident-dialog";
 
-export default function IncidentsPage() {
+function IncidentsContent() {
   const params = useSearchParams();
   const serviceId = params.get("service_id") || undefined;
 
@@ -16,5 +17,13 @@ export default function IncidentsPage() {
       </div>
       <IncidentsTable serviceId={serviceId} />
     </div>
+  );
+}
+
+export default function IncidentsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <IncidentsContent />
+    </Suspense>
   );
 }
